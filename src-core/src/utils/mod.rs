@@ -80,16 +80,12 @@ async fn watch_vrchat_process_osc() {
                     .map(|res| !res.is_empty())
                     .unwrap_or(false);
                 log::debug!("[vrc_heartbeat] fetching mute state:{}", active);
-                unsafe {
-                    if VRCHAT_ACTIVE != active {
-                        if active {
-                            trace!("[vrc_heartbeat] osc set active");
-                            set_vrchat_active().await;
-                        } else {
-                            trace!("[vrc_heartbeat] osc set inactive");
-                            set_vrchat_inactve().await;
-                        }
-                    }
+                if active {
+                    trace!("[vrc_heartbeat] osc set active");
+                    set_vrchat_active().await;
+                } else {
+                    trace!("[vrc_heartbeat] osc set inactive");
+                    set_vrchat_inactve().await;
                 }
             }
         }
