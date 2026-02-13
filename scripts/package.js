@@ -23,10 +23,22 @@ async function main() {
   console.log("packaging");
   await execPromise('ZSTD_CLEVEL=19 nice -n20 tar -I zstd -cvpf oyasumi-linux.tar.zst Oyasumi/');
   await rimraf("bin/");
+  await rimraf("/tmp/Oyasumi_build/Oyasumi/");
+  await execPromise('sha512sum oyasumi-linux.tar.zst >> oyasumi-linux.tar.zst.checksum');
+  await execPromise('sha256sum oyasumi-linux.tar.zst >> oyasumi-linux.tar.zst.checksum');
+  await execPromise('md5sum oyasumi-linux.tar.zst >> oyasumi-linux.tar.zst.checksum');
+  await execPromise('sha1sum oyasumi-linux.tar.zst >> oyasumi-linux.tar.zst.checksum');
+  const key=process.env.OYASUMI_GPG_SIGN_KEY;
+  if (key){
+    console.log("signing");
+    await execPromise("gpg --local-user "+ key+" -a --detach-sign oyasumi-linux.tar.zst");
+    await execPromise("gpg --local-user "+ key+" -a --detach-sign oyasumi-linux.tar.zst.checksum");
+  }else{
+    console.warn("GPG_SIGN_KEY env not set release will not be signed")
+  }
   await mkdirp("bin/");
-  await copy("/tmp/Oyasumi_build/oyasumi-linux.tar.zst","bin/oyasumi-linux.tar.zst");
+  await copy("/tmp/Oyasumi_build/","bin/",);
   await rimraf("/tmp/Oyasumi_build");
-
 }
 const execPromise = (command) => new Promise((resolve, reject) => {
   exec(command,{ cwd: '/tmp/Oyasumi_build/' }, (err, stdout, stderr) => {
