@@ -27,15 +27,17 @@ export class SleepModeEnableAtTimeAutomationService {
     this.automationConfig.configs
       .pipe(map((configs) => configs.SLEEP_MODE_ENABLE_AT_TIME))
       .subscribe((config) => {
+        if (!config.enabled) {
+          if (this.timeout) {
+            clearTimeout(this.timeout);
+          }
+          return;
+        }
         if (!config || !config.time) {
           console.debug('SleepModeEnableAtTimeAutomationService config is null!');
           return;
         }
         if (config.enabled && this.config != config) {
-          if (!config.enabled && this.timeout) {
-            clearTimeout(this.timeout);
-            return;
-          }
           const duration = time_to_wait(config.time);
           this.config = config;
 
@@ -47,6 +49,9 @@ export class SleepModeEnableAtTimeAutomationService {
   }
 
   async enable() {
+    if (!this.config.enabled) {
+      return;
+    }
     this.sleep.enableSleepMode({
       type: 'AUTOMATION',
       automation: 'SLEEP_MODE_ENABLE_AT_TIME',

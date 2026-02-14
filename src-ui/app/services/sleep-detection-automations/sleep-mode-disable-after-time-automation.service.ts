@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { AutomationConfigService } from '../automation-config.service';
 import {
@@ -30,9 +29,20 @@ export class SleepModeDisableAfterTimeAutomationService {
       .pipe(map((configs) => configs.SLEEP_MODE_DISABLE_AFTER_TIME))
       .subscribe((config) => {
         this.config = config;
+        if (!this.config.enabled) {
+          if (this.ClearTimeout) {
+            clearTimeout(this.ClearTimeout);
+          }
+          if (this.timeout) {
+            clearTimeout(this.timeout);
+          }
+        }
       });
 
     this.sleep.mode.pipe(distinctUntilChanged()).subscribe((mode) => {
+      if (!this.config.enabled) {
+        return;
+      }
       if (!this.config.duration) {
         console.error('SleepModeDisableAfterTimeAutomationService this.config.duration is null!');
         return;
@@ -62,6 +72,9 @@ export class SleepModeDisableAfterTimeAutomationService {
   }
 
   async disable() {
+    if (!this.config.enabled) {
+      return;
+    }
     await this.sleep.disableSleepMode({
       type: 'AUTOMATION',
       automation: 'SLEEP_MODE_DISABLE_AFTER_TIME',
