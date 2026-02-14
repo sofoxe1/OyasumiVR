@@ -31,7 +31,6 @@ export class SleepModeEnableAtTimeAutomationService {
           if (this.timeout) {
             clearTimeout(this.timeout);
           }
-          return;
         }
         if (!config || !config.time) {
           console.debug('SleepModeEnableAtTimeAutomationService config is null!');

@@ -26,11 +26,10 @@ export class SleepModeDisableAtTimeAutomationService {
     this.automationConfig.configs
       .pipe(map((configs) => configs.SLEEP_MODE_DISABLE_AT_TIME))
       .subscribe((config) => {
-        if (!this.config.enabled) {
+        if (!config.enabled) {
           if (this.timeout){
             clearTimeout(this.timeout);
           }
-          return;
         }
         if (!config || !config.time) {
           console.debug('SleepModeDisableAtTimeAutomationService config is null!');
