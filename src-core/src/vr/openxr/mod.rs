@@ -4,7 +4,7 @@ use std::{
 };
 mod input;
 use glam::{Quat, Vec3A};
-use log::{debug, info};
+use log::{debug, info, trace};
 use serde_repr::Serialize_repr;
 use tokio::{spawn, sync::Mutex};
 use xr_overlay::{
@@ -190,8 +190,10 @@ async fn get_pose(src: &'static str, ctx: &mut AppRunner) -> Option<Posef> {
     }
     let res = ctx.get_hmd_posef(ReferenceSpaceT::STAGE);
     if let Ok(posef) = res {
+        trace!("get_pose: success {}",src);
         return Some(posef);
     } else if let Err(err) = res {
+
         match err {
             LocateError::RuntimeFailure
             | LocateError::InstanceLost
@@ -199,17 +201,21 @@ async fn get_pose(src: &'static str, ctx: &mut AppRunner) -> Option<Posef> {
             | LocateError::HandleInvalid => {
                 let _ = OXR_HANDLE.get().unwrap().lock().await.run();
                 tokio::time::sleep(Duration::from_secs(1)).await;
+                trace!("get_pose: handle invalid");
             }
-            _ => (),
+            _ => {trace!("get pose err: {:?}",err);return None;},
         };
         if !ctx.is_runtime_active() {
+            trace!("get_pose: runtime inactive");
             let _ = ctx.run();
             tokio::time::sleep(Duration::from_secs(1)).await;
             return None;
         }
         if err == LocateError::LocationEmpty {
             debug!("[Core] Failed to get hmd Posef,{}:{:?}", src, err);
+            return None;
         }
+        trace!("get_pose err: {:?}",err);
     }
     None
 }
@@ -242,6 +248,10 @@ async fn session_restart() {
 //no need for atomic since vr is running on single thread
 static mut RESTARTING: bool = false;
 fn openxr_callback(event: AppEvent) {
+
+    if log::STATIC_MAX_LEVEL>=log::Level::Trace && !matches!(event,AppEvent::ButtonsUpdated){
+        log::log!(log::Level::Trace,"{:?}",event);
+    }
     match event {
         AppEvent::SessionEnded | AppEvent::Killed => {
             if !unsafe { RESTARTING } {
@@ -275,11 +285,13 @@ async fn update_status(new_status: VRStatus) {
 static ABORT_GESTURE_DETECTION: Mutex<bool> = Mutex::const_new(false);
 static GESTURE_DETECTION_RUNNING: Mutex<bool> = Mutex::const_new(false);
 pub async fn stop_head_shake_detection() {
+    trace!("stop_head_shake_detection");
     if *GESTURE_DETECTION_RUNNING.lock().await {
         *ABORT_GESTURE_DETECTION.lock().await = true;
     }
 }
 pub async fn start_head_shake_detection() {
+    trace!("start_head_shake_detection");
     if *OXR_STATE.lock().await == VRStatus::Initialized {
         let frame_time = (1000.
             / OXR_HANDLE

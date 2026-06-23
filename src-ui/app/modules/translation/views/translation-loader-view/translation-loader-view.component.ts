@@ -48,7 +48,7 @@ export class TranslationLoaderViewComponent {
         );
       this.state = 'INITIALIZED';
     } catch (e) {
-      info(e);
+      info(""+e);
       error('Could not fetch downloadable translations: ' + e);
       this.state = 'ERROR';
       this.error =

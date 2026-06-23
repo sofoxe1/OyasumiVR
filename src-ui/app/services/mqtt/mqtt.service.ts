@@ -90,7 +90,7 @@ export class MqttService {
     });
     client.on('error', (e) => {
       this.setClientStatus('ERROR');
-      error('[MQTT] MQTT Client error:', e);
+      error('[MQTT] MQTT Client error:'+ e);
     });
   }
 

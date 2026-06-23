@@ -8,8 +8,7 @@ import {
 import { distinctUntilChanged, map } from 'rxjs';
 import { SleepService } from '../sleep.service';
 import { time_to_ms } from 'src-ui/app/utils/time';
-import { error, warn } from '@tauri-apps/plugin-log';
-import { info } from 'console';
+import { error, warn, info } from '@tauri-apps/plugin-log';
 
 @Injectable({
   providedIn: 'root',
@@ -25,10 +24,10 @@ export class SleepModeDisableAfterTimeAutomationService {
   constructor(
     private automationConfig: AutomationConfigService,
     private sleep: SleepService
-  ) {}
-  log(params:string) {
-    info("SleepModeDisableAfterTimeAutomationService: "+params);
-    
+  ) { }
+  log(params: string) {
+    info("SleepModeDisableAfterTimeAutomationService: " + params);
+
   }
   async init() {
     this.automationConfig.configs
@@ -76,11 +75,11 @@ export class SleepModeDisableAfterTimeAutomationService {
             clearTimeout(this.ClearTimeout);
           }
           if (!this.timeout) {
-            this.timeout = setTimeout(() => this.disable(), time_to_ms(this.config.duration)-time_to_ms(this.config.sleep));
+            this.timeout = setTimeout(() => this.disable(), time_to_ms(this.config.duration) - time_to_ms(this.config.sleep));
           }
         }, time_to_ms(this.config.sleep));
       } else {
-        if (this.SleepEnableTimeout){
+        if (this.SleepEnableTimeout) {
           this.log("else (1)");
           clearTimeout(this.SleepEnableTimeout);
         }

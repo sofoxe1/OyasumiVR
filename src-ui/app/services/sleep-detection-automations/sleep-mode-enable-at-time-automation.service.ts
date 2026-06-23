@@ -8,8 +8,7 @@ import {
 import { map } from 'rxjs';
 import { SleepService } from '../sleep.service';
 import { time_to_wait } from 'src-ui/app/utils/time';
-import { info } from 'console';
-import { debug } from '@tauri-apps/plugin-log';
+import { debug, info } from '@tauri-apps/plugin-log';
 
 @Injectable({
   providedIn: 'root',

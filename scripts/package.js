@@ -5,14 +5,15 @@ import { mkdirp } from 'mkdirp';
 import copy from 'recursive-copy';
 import { rimraf } from 'rimraf';
 
+
 async function main() {
   const release_path = '/tmp/Oyasumi_build/Oyasumi/';
   await rimraf(release_path);
   await mkdirp(release_path);
   await copy('src-core/target/release/OyasumiVR', release_path + 'OyasumiVR', { overwrite: true });
-  await copy('src-core/target/release/resources', release_path + 'resources', { overwrite: true });
-  await copy('src-core/target/release/cef', release_path + 'resources/sidecars/cef', {
-    overwrite: true,
+  await copy('src-core/target/release/resources/', release_path + 'resources/', { overwrite: true });
+  await copy('src-core/target/release/cef/', release_path + 'resources/sidecars/cef/', {
+    overwrite: true
   });
   try {
     await unlinkSync('/tmp/Oyasumi_build/Oyasumi/resources/manifest.vrmanifest');
