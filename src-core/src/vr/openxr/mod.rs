@@ -47,6 +47,7 @@ async fn get_ctx() -> AppContext<xr_overlay::openxr::Vulkan> {
             if !matches!(xr_overlay::error::Error::RuntimeUnavalible, _e) {
                 log::warn!("get_ctx {:?}", _e);
             }
+            log::info!("get ctx {:?}", _e);
             tokio::time::sleep(Duration::from_secs(10)).await;
             continue;
         } else {

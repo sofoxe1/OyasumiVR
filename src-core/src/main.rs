@@ -175,12 +175,12 @@ fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
 
     builder = builder
         //also set in Cargo.toml
-        .level(LevelFilter::Info)
+        .level(LevelFilter::Trace)
         .target(tauri_plugin_log::Target::new(
             tauri_plugin_log::TargetKind::Stdout,
         ))
-        .level_for("vrchat_osc", LevelFilter::Error)
-        .level_for("xr_overlay", LevelFilter::Debug)
+        // .level_for("vrchat_osc", LevelFilter::Error)
+        // .level_for("xr_overlay", LevelFilter::Debug)
         .target(tauri_plugin_log::Target::new(
             tauri_plugin_log::TargetKind::LogDir { file_name: None },
         ));
