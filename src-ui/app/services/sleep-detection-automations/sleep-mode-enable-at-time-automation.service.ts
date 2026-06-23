@@ -8,6 +8,8 @@ import {
 import { map } from 'rxjs';
 import { SleepService } from '../sleep.service';
 import { time_to_wait } from 'src-ui/app/utils/time';
+import { info } from 'console';
+import { debug } from '@tauri-apps/plugin-log';
 
 @Injectable({
   providedIn: 'root',
@@ -33,14 +35,14 @@ export class SleepModeEnableAtTimeAutomationService {
           }
         }
         if (!config || !config.time) {
-          console.debug('SleepModeEnableAtTimeAutomationService config is null!');
+          debug('SleepModeEnableAtTimeAutomationService config is null!');
           return;
         }
         if (config.enabled && this.config != config) {
           const duration = time_to_wait(config.time);
           this.config = config;
 
-          console.log('firing SleepModeEnableAtTimeAutomationService in:' + duration + 'ms');
+          info('firing SleepModeEnableAtTimeAutomationService in:' + duration + 'ms');
           this.timeout = setTimeout(() => this.enable(), duration);
         }
         this.config = config;

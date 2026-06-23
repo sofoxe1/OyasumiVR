@@ -56,7 +56,7 @@ export class SleepService {
   ) {}
 
   async init() {
-    this.pose.subscribe((v)=>console.log("headset pose:"+v));
+    this.pose.subscribe((v)=>info("headset pose:"+v));
     // Load default settings
     const settings = await firstValueFrom(this.appSettings.settings);
     let mode: boolean;

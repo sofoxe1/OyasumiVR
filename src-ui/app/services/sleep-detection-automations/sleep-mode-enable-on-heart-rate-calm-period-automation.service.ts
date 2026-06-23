@@ -8,6 +8,7 @@ import {
 import { distinctUntilChanged, filter, firstValueFrom, map, skip } from 'rxjs';
 import { SleepService } from '../sleep.service';
 import { PulsoidService } from '../integrations/pulsoid.service';
+import { info } from '@tauri-apps/plugin-log';
 
 @Injectable({
   providedIn: 'root',
@@ -58,7 +59,7 @@ export class SleepModeEnableOnHeartRateCalmPeriodAutomationService {
         timeSinceLastSleepDisabled > 1000 * 60 * 15 && // Do not enable sleep mode if it was disabled less than 15 minutes ago
         !sleepMode
       ) {
-        console.log({
+        info(""+{
           timeSinceLastExceeded,
           timeSinceLastReceived,
           timeSinceLastSleepDisabled,

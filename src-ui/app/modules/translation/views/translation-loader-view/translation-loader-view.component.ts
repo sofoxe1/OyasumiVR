@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { TranslationEditService } from '../../services/translation-edit.service';
 import { DownloadableTranslation } from '../../models/downloadable-translation';
 import { SelectBoxItem } from '../../../../components/select-box/select-box.component';
-import { error } from '@tauri-apps/plugin-log';
+import { error, info } from '@tauri-apps/plugin-log';
 import { message, open as openFile } from '@tauri-apps/plugin-dialog';
 import { readTextFile } from '@tauri-apps/plugin-fs';
 import { Router } from '@angular/router';
@@ -48,7 +48,7 @@ export class TranslationLoaderViewComponent {
         );
       this.state = 'INITIALIZED';
     } catch (e) {
-      console.log(e);
+      info(e);
       error('Could not fetch downloadable translations: ' + e);
       this.state = 'ERROR';
       this.error =

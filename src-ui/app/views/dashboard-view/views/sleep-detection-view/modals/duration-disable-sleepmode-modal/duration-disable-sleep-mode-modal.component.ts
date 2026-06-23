@@ -3,6 +3,7 @@ import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.
 import { fade, fadeUp, triggerChildren, vshrink } from '../../../../../../utils/animations';
 import { TranslateService } from '@ngx-translate/core';
 import { getStringForDuration, getStringForDurationAwake, getStringForDurationSleep } from '../../tabs/sleep-detection-tab.component';
+import { warn } from '@tauri-apps/plugin-log';
 
 export interface DurationDisableSleepModeModalInputModel {
   duration: string | null;
@@ -53,15 +54,15 @@ export class DurationDisableSleepModeModalComponent
       this.sleep = '0' + this.sleep;
     }
     if (!this.duration || !this.duration.match(/[0-2][0-9]:[0-5][0-9]/g)) {
-      console.warn('mallformed duration:' + this.duration);
+      warn('mallformed duration:' + this.duration);
       this.duration = '00:00';
     }
     if (!this.sleep || !this.sleep.match(/[0-2][0-9]:[0-5][0-9]/g)) {
-      console.warn('mallformed sleep time:' + this.sleep);
+      warn('mallformed sleep time:' + this.sleep);
       this.sleep = '00:15';
     }
     if (!this.awake || !this.awake.match(/[0-2][0-9]:[0-5][0-9]/g)) {
-      console.warn('mallformed awake time:' + this.awake);
+      warn('mallformed awake time:' + this.awake);
       this.awake = '00:00';
     }
   }

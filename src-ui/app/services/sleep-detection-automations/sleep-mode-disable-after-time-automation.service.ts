@@ -8,6 +8,8 @@ import {
 import { distinctUntilChanged, map } from 'rxjs';
 import { SleepService } from '../sleep.service';
 import { time_to_ms } from 'src-ui/app/utils/time';
+import { error, warn } from '@tauri-apps/plugin-log';
+import { info } from 'console';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +27,7 @@ export class SleepModeDisableAfterTimeAutomationService {
     private sleep: SleepService
   ) {}
   log(params:string) {
-    console.log("SleepModeDisableAfterTimeAutomationService: "+params);
+    info("SleepModeDisableAfterTimeAutomationService: "+params);
     
   }
   async init() {
@@ -52,7 +54,7 @@ export class SleepModeDisableAfterTimeAutomationService {
         return;
       }
       if (!this.config.duration) {
-        console.error('SleepModeDisableAfterTimeAutomationService this.config.duration is null!');
+        warn('SleepModeDisableAfterTimeAutomationService this.config.duration is null!');
         return;
       }
       if (mode) {
@@ -63,7 +65,7 @@ export class SleepModeDisableAfterTimeAutomationService {
         this.SleepEnableTimeout = setTimeout(() => {
           this.log("SleepEnableTimeout");
           if (!this.config.duration) {
-            console.error(
+            error(
               'SleepModeDisableAfterTimeAutomationService this.config.duration is null! (2)'
             );
             this.log("SleepEnableTimeout exit");
@@ -91,7 +93,7 @@ export class SleepModeDisableAfterTimeAutomationService {
           this.ClearTimeout = setTimeout(() => {
             if (!this.timeout) {
               this.log("else (4)");
-              console.warn('SleepModeDisableAfterTimeAutomationService upsie');
+              warn('SleepModeDisableAfterTimeAutomationService upsie');
               return;
             }
             this.log("else (5)");

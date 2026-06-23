@@ -7,6 +7,7 @@ import { DeviceManagerService } from 'src-ui/app/services/device-manager.service
 import { TranslateService } from '@ngx-translate/core';
 import { isEqual } from 'lodash';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {  warn } from '@tauri-apps/plugin-log';
 
 @Component({
   selector: 'app-device-selector',
@@ -110,7 +111,7 @@ export class DeviceSelectorComponent implements OnInit {
       const devices = await this.deviceManagerService.getDevicesForSelection(this.selection);
       this.deviceCount = devices.knownDevices.length;
     } catch (error) {
-      console.error('Failed to get devices for selection:', error);
+      warn('Failed to get devices for selection:'+ error);
       this.deviceCount = 0;
     }
   }

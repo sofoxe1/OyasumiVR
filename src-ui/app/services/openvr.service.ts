@@ -78,7 +78,7 @@ export class VRService {
     if (typeof analogGain === 'number' && isFinite(analogGain)) {
       return invoke('openvr_set_analog_gain', { analogGain });
     } else {
-      console.error('[VR] Attempted to set analogGain to invalid value', analogGain);
+      error('[VR] Attempted to set analogGain to invalid value'+ analogGain);
       error('[VR] Attempted to set analogGain to invalid value: ' + analogGain);
     }
   }

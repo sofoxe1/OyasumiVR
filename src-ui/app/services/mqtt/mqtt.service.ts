@@ -4,7 +4,7 @@ import { BehaviorSubject, concatMap, debounceTime, distinctUntilChanged, map, sk
 import { AppSettingsService } from '../app-settings.service';
 import { AppSettings } from '../../models/settings';
 import { isEqual } from 'lodash';
-import { info, warn } from '@tauri-apps/plugin-log';
+import { error, info, warn } from '@tauri-apps/plugin-log';
 import { MqttConfig, MqttStatus } from '../../models/mqtt';
 
 @Injectable({
@@ -90,7 +90,7 @@ export class MqttService {
     });
     client.on('error', (e) => {
       this.setClientStatus('ERROR');
-      console.error('[MQTT] MQTT Client error:', e);
+      error('[MQTT] MQTT Client error:', e);
     });
   }
 

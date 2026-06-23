@@ -19,7 +19,7 @@ import { listen } from '@tauri-apps/api/event';
 import { VRChatAPI } from './vrchat-api';
 import { VRChatAuth, VRChatAuthStatus } from './vrchat-auth';
 import { VRChatSocket } from './vrchat-socket';
-import { error } from '@tauri-apps/plugin-log';
+import { debug, error } from '@tauri-apps/plugin-log';
 
 @Injectable({
   providedIn: 'root',
@@ -77,11 +77,11 @@ export class VRChatService {
 
   private async watchVRChatProcess() {
     await listen<boolean>('VRCHAT_PROCESS_ACTIVE', (event) => {
-      console.debug('vrchat running event:' + event.payload);
+      debug('vrchat running event:' + event.payload);
       this._vrchatProcessActive.next(event.payload);
     });
     const s = await invoke<boolean>('is_vrchat_active');
-    console.debug('vrchat running start:' + s);
+    debug('vrchat running start:' + s);
     this._vrchatProcessActive.next(s);
   }
 
