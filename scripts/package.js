@@ -12,7 +12,8 @@ async function main() {
   await mkdirp(release_path);
   await copy('src-core/target/release/OyasumiVR', release_path + 'OyasumiVR', { overwrite: true });
   await copy('src-core/target/release/resources/', release_path + 'resources/', { overwrite: true });
-  await copy('src-core/target/release/cef/', release_path + 'resources/sidecars/cef/', {
+  await execPromise2('./download_cef.sh');
+  await copy('cef/', release_path + 'resources/sidecars/cef/', {
     overwrite: true
   });
   try {
@@ -21,6 +22,13 @@ async function main() {
   try {
     await unlinkSync('/tmp/Oyasumi_build/Oyasumi/resources/input');
   } catch {}
+  if (process.env.NO_PACKAGE=="1"){
+    await rimraf('bin/');
+    await copy('/tmp/Oyasumi_build/', 'bin/', {overwrite: true});
+    await rimraf('/tmp/Oyasumi_build/Oyasumi/');
+	  return;
+
+  }
   console.log('packaging');
   await execPromise('ZSTD_CLEVEL=19 nice -n20 tar -I zstd -cvpf oyasumi-linux.tar.zst Oyasumi/');
   await rimraf('bin/');
@@ -50,6 +58,20 @@ async function main() {
 const execPromise = (command) =>
   new Promise((resolve, reject) => {
     exec(command, { cwd: '/tmp/Oyasumi_build/' }, (err, stdout, stderr) => {
+      if (err) {
+        console.error(err);
+        reject(stderr || err);
+      } else {
+        resolve(stdout);
+      }
+    });
+  });
+main().catch((e) => {
+  throw e;
+});
+const execPromise2 = (command) =>
+  new Promise((resolve, reject) => {
+    exec(command, { }, (err, stdout, stderr) => {
       if (err) {
         console.error(err);
         reject(stderr || err);
