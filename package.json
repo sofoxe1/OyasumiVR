@@ -37,7 +37,7 @@
     "postinstall": "cd src-overlay-ui && npm install && cd ..",
     "init": "npm install && node scripts/init.js",
     "ci": "npm ci && node scripts/init.js",
-    "release": "run-s build &&node scripts/package.js",
+    "release": "RUSTFLAGS=\"-C target-cpu=x86-64-v3\" run-s build &&node scripts/package.js",
     "package": "node scripts/package.js"
   },
   "private": true,
