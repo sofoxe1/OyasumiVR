@@ -11,7 +11,9 @@ async function main() {
   await rimraf(release_path);
   await mkdirp(release_path);
   await copy('src-core/target/release/OyasumiVR', release_path + 'OyasumiVR', { overwrite: true });
-  await copy('src-core/target/release/resources/', release_path + 'resources/', { overwrite: true });
+  await copy('src-core/resources/', release_path + 'resources/', { overwrite: true });
+  await copy('src-overlay-sidecar-linux/target/production/src-overlay-sidecar-linux', release_path + 'resources/sidecars/oyasumivr-overlay-sidecar', { overwrite: true });
+  await copy('src-overlay-ui/build', release_path + 'resources/sidecars/ui', { overwrite: true });
   await execPromise2('./download_cef.sh');
   await copy('cef/', release_path + 'resources/sidecars/cef/', {
     overwrite: true
