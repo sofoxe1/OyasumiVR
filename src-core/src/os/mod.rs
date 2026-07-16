@@ -3,7 +3,6 @@ pub mod elevation;
 pub mod linux;
 mod models;
 mod notifications;
-mod sounds_gen;
 use dbus::blocking::Connection;
 use log::{debug, error};
 use notify::event::{AccessKind, AccessMode, RemoveKind};

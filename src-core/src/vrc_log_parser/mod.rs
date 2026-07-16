@@ -6,7 +6,7 @@ use log::{debug, info, trace, warn};
 use serde::{Deserialize, Serialize};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::{
-    fs::{read_dir, File},
+    fs::{File, read_dir},
     io::{BufRead, BufReader},
     sync::Arc,
     time::{Duration, SystemTime, UNIX_EPOCH},
@@ -99,13 +99,11 @@ fn parse_datetime_from_line(line: &str) -> Option<u64> {
     let time = Local.from_local_datetime(&localtime).latest();
     time.map(|v| v.timestamp_millis() as u64)
 }
-async fn process_log_line(line: String, initial_load: bool,cancelation_token:&CancellationToken) {
-
+async fn process_log_line(line: String, initial_load: bool, cancelation_token: &CancellationToken) {
     if line.is_empty() {
         return;
     }
     if line.ends_with("VRCNP: Stopping server") {
-        
         cancelation_token.cancel();
         return;
     }
@@ -114,12 +112,8 @@ async fn process_log_line(line: String, initial_load: bool,cancelation_token:&Ca
     unsafe {
         if !(line.len() > INFO_OFFSET + 5
         // && line.contains("-"))
-        && line
-            .chars()
-            .skip(INFO_OFFSET-1)
-            .next()
-            //how can this be none?????
-            .map_or(false, |c| c == '-'))
+        && (line
+            .chars().nth(INFO_OFFSET-1))==Some('-'))
         {
             return;
         }
@@ -247,7 +241,7 @@ fn start_log_watch_task(path: String) -> CancellationToken {
             // Process new lines
             for line in lines_iterator.by_ref() {
                 let line = line.unwrap();
-                process_log_line(line, first_run,&cancellation_token_internal).await;
+                process_log_line(line, first_run, &cancellation_token_internal).await;
             }
 
             if first_run {

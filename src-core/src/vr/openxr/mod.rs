@@ -8,7 +8,7 @@ use log::{debug, info, trace};
 use serde_repr::Serialize_repr;
 use tokio::{spawn, sync::Mutex};
 use xr_overlay::{
-    RgbaTexture,
+    Texture,
     error::LocateError,
     model::AppContext,
     openxr::{Posef, Vector3f},
@@ -132,7 +132,7 @@ pub async fn init() {
         });
 
         tokio::task::spawn(async move {
-            let mut last_pose = SIDE::Front;
+            let mut last_pose = Side::Front;
             loop {
                 let pose = get_pose("sleep", &mut *OXR_HANDLE.wait().lock().await).await;
                 if let Some(pose) = pose {
@@ -159,26 +159,26 @@ pub async fn init() {
 }
 #[derive(Debug, Clone, Copy, PartialEq, Serialize_repr)]
 #[repr(u8)]
-pub enum SIDE {
+pub enum Side {
     Back = 0,
     Left = 1,
     Right = 2,
     Front = 3,
 }
 #[inline]
-fn get_side(quat: Quat) -> SIDE {
+fn get_side(quat: Quat) -> Side {
     if !{ quat.mul_vec3a(Vec3A::Y).dot(Vec3A::Y).abs() < 0.62 } {
-        SIDE::Front
+        Side::Front
     } else {
         let side = quat.mul_vec3a(Vec3A::X).dot(Vec3A::Y);
         if side.abs() > 0.62 {
             match side.is_sign_negative() {
-                true => SIDE::Right,
-                false => SIDE::Left,
+                true => Side::Right,
+                false => Side::Left,
             }
         } else {
             //oyasumi doesn't distunguish between laying face down and up
-            SIDE::Back
+            Side::Back
         }
     }
 }
@@ -190,10 +190,9 @@ async fn get_pose(src: &'static str, ctx: &mut AppRunner) -> Option<Posef> {
     }
     let res = ctx.get_hmd_posef(ReferenceSpaceT::STAGE);
     if let Ok(posef) = res {
-        trace!("get_pose: success {}",src);
+        trace!("get_pose: success {}", src);
         return Some(posef);
     } else if let Err(err) = res {
-
         match err {
             LocateError::RuntimeFailure
             | LocateError::InstanceLost
@@ -203,7 +202,10 @@ async fn get_pose(src: &'static str, ctx: &mut AppRunner) -> Option<Posef> {
                 tokio::time::sleep(Duration::from_secs(1)).await;
                 trace!("get_pose: handle invalid");
             }
-            _ => {trace!("get pose err: {:?}",err);return None;},
+            _ => {
+                trace!("get pose err: {:?}", err);
+                return None;
+            }
         };
         if !ctx.is_runtime_active() {
             trace!("get_pose: runtime inactive");
@@ -215,7 +217,7 @@ async fn get_pose(src: &'static str, ctx: &mut AppRunner) -> Option<Posef> {
             debug!("[Core] Failed to get hmd Posef,{}:{:?}", src, err);
             return None;
         }
-        trace!("get_pose err: {:?}",err);
+        trace!("get_pose err: {:?}", err);
     }
     None
 }
@@ -248,9 +250,8 @@ async fn session_restart() {
 //no need for atomic since vr is running on single thread
 static mut RESTARTING: bool = false;
 fn openxr_callback(event: AppEvent) {
-
-    if log::STATIC_MAX_LEVEL>=log::Level::Trace && !matches!(event,AppEvent::ButtonsUpdated){
-        log::log!(log::Level::Trace,"{:?}",event);
+    if log::STATIC_MAX_LEVEL >= log::Level::Trace && !matches!(event, AppEvent::ButtonsUpdated) {
+        log::log!(log::Level::Trace, "{:?}", event);
     }
     match event {
         AppEvent::SessionEnded | AppEvent::Killed => {
@@ -309,15 +310,15 @@ pub async fn start_head_shake_detection() {
                 }
                 let mut ctx = OXR_HANDLE.get().as_ref().unwrap().lock().await;
                 let _ = ctx.run();
-                if let Some(handler) = INPUT_CONTEXT.lock().await.as_mut() {
-                    if check_user_activity(&mut handler.1).unwrap() {
-                        log::info!("button press detected");
-                        send_event("GESTURE_DETECTED", "").await;
-                        break;
-                    }
+                if let Some(handler) = INPUT_CONTEXT.lock().await.as_mut()
+                    && check_user_activity(&mut handler.1).unwrap()
+                {
+                    log::info!("button press detected");
+                    send_event("GESTURE_DETECTED", "").await;
+                    break;
                 }
                 if *OXR_STATE.lock().await == VRStatus::Initialized {
-                    if let Some(posef) = get_pose("head shake", &mut *ctx).await {
+                    if let Some(posef) = get_pose("head shake", &mut ctx).await {
                         let pos = posef.position;
                         let quat = posef.orientation;
                         GESTURE_DETECTOR
@@ -356,7 +357,12 @@ pub async fn set_brightness(brightness: f64, perceived_brightness_adjustment_gam
     ctx.set_raw_texture(
         overlay_handle.unwrap(),
         // RgbaTexture::new(1, 1, [brightness, 0, 0, 255].to_vec()),
-        RgbaTexture::new(1, 1, [0, 0, 0, brightness].to_vec()),
+        Texture::new(
+            1,
+            1,
+            [0, 0, 0, brightness].to_vec(),
+            xr_overlay::vulkano::format::Format::R8G8B8A8_UNORM,
+        ),
         false,
     );
     let _ = ctx.run();
