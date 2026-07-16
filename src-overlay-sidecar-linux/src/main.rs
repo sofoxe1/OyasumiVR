@@ -7,14 +7,15 @@ use std::{
 };
 
 use log::{info, trace};
-use oyasumi_shared::{OVERLAY_CONFIG_PATH, XR_BINDING_FILE_PATH, get_log_path};
+use oyasumi_shared::{OVERLAY_CONFIG_PATH, XR_BINDING_FILE_PATH, get_log_level, get_log_path};
 use tonic::transport::Channel;
 use xr_overlay::{
     openxr::{Posef, Quaternionf, Vector3f},
     runner::DeviceRole,
 };
 use xr_overlay_cef::{
-    cef::{ImplBrowser, ImplFrame}, disable_gpu, disable_vr, pointless_cef_thread_spawner
+    cef::{ImplBrowser, ImplFrame},
+    disable_gpu, disable_vr, pointless_cef_thread_spawner,
 };
 
 use crate::{
@@ -89,16 +90,17 @@ fn main() {
     }));
 
     let mut binding = env_logger::Builder::new();
-    let mut logger = binding.filter_level(log::LevelFilter::Trace);
+
+    let logger = binding.filter_level(get_log_level());
     static mut MAIN: bool = false;
-    #[cfg(debug_assertions)]
-    {
-        logger = logger
-            .filter_module("xr_overlay_cef", log::LevelFilter::Debug)
-            .filter_module("xr_overlay", log::LevelFilter::Debug)
-            .filter_module("tokio_tungstenite", log::LevelFilter::Warn)
-            .filter_module("tungstenite", log::LevelFilter::Warn);
-    }
+    // #[cfg(debug_assertions)]
+    // {
+    //     logger = logger
+    //         .filter_module("xr_overlay_cef", log::LevelFilter::Debug)
+    //         .filter_module("xr_overlay", log::LevelFilter::Debug)
+    //         .filter_module("tokio_tungstenite", log::LevelFilter::Warn)
+    //         .filter_module("tungstenite", log::LevelFilter::Warn);
+    // }
 
     let w = Writter::default();
     let f_ = w.file.clone();
@@ -187,7 +189,7 @@ static HANDLES: LazyLock<Mutex<Vec<tokio::task::JoinHandle<()>>>> = LazyLock::ne
 static CORE_CLIENT: OnceLock<tokio::sync::Mutex<OyasumiCoreClient<Channel>>> = OnceLock::new();
 static UI_PORT: OnceLock<u16> = OnceLock::new();
 static HTTP_PORT: OnceLock<u16> = OnceLock::new();
-static WS_PORT:OnceLock<u16>=OnceLock::new();
+static WS_PORT: OnceLock<u16> = OnceLock::new();
 async fn tokio_main() {
     trace!("tokio_main");
     tokio::task::spawn(async {
@@ -235,7 +237,7 @@ async fn tokio_main() {
     UI_PORT.set(ui_port).unwrap();
 
     log::info!("ui port:{}", ui_port);
-     std::thread::sleep(Duration::from_millis(100));
+    std::thread::sleep(Duration::from_millis(100));
     let url = format!("http://localhost:{}/splash?corePort={}", ui_port, http_port);
     unsafe { SPLASH_PLAYED = true };
     let url_noti = format!(

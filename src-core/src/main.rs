@@ -30,7 +30,7 @@ pub use grpc::models as Models;
 use globals::{FLAGS, TAURI_APP_HANDLE};
 use log::{LevelFilter, error, info, warn};
 
-use oyasumi_shared::get_log_path;
+use oyasumi_shared::{get_log_level, get_log_path};
 use tauri::{Manager, Wry, plugin::TauriPlugin};
 use tauri_plugin_cli::CliExt;
 use tauri_plugin_log::RotationStrategy;
@@ -172,10 +172,8 @@ fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
             ))
         })
         .rotation_strategy(RotationStrategy::KeepSome(100));
-
     builder = builder
-        //also set in Cargo.toml
-        .level(LevelFilter::Trace)
+        .level(get_log_level())
         .target(tauri_plugin_log::Target::new(
             tauri_plugin_log::TargetKind::Stdout,
         ))

@@ -1,5 +1,6 @@
 use std::{fs, path::PathBuf, sync::LazyLock};
 
+use log::LevelFilter;
 use xdg::BaseDirectories;
 pub static XR_BINDING_FILE_PATH: LazyLock<PathBuf> =
     LazyLock::new(|| get_config_path().join(PathBuf::from("bindings_config.toml")));
@@ -54,3 +55,25 @@ pub static RESOURCES_PATH: LazyLock<PathBuf> = LazyLock::new(|| {
         "can not find the resources folder it has to be either next to executable or /usr/share/oyasumivr or $XDG_DATA_HOME/co.raphii.oyasumi/resources"
     );
 });
+#[inline]
+pub fn get_log_level() -> LevelFilter {
+    if let Some(level) = std::env::var_os("LOG_LEVEL") {
+        match level.to_ascii_lowercase().to_str().unwrap_or("") {
+            "trace" => LevelFilter::Trace,
+            "debug" => LevelFilter::Debug,
+            "info" => LevelFilter::Info,
+            "warn" => LevelFilter::Warn,
+            "error" => LevelFilter::Error,
+            "off" => LevelFilter::Off,
+            _ => {
+                eprintln!(
+                    "Unknown log level: {} defaulting to TRACE",
+                    level.to_string_lossy()
+                );
+                LevelFilter::Trace
+            }
+        }
+    } else {
+        LevelFilter::Info
+    }
+}
