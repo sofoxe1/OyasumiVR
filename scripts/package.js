@@ -80,6 +80,3 @@ const execPromise2 = (command) =>
       }
     });
   });
-main().catch((e) => {
-  throw e;
-});

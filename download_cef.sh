@@ -1,6 +1,7 @@
 #!/bin/bash
 ls cef
 if [ $? -eq 0 ]; then
+  echo "cef already downloaded"
 	exit 0
 fi
 build_dir=$PWD
@@ -13,7 +14,7 @@ if [ $? -ne 0 ]; then
        	echo "failed to verify cef checksum";
 	exit -1;
 fi
-tar -xvf cef_binary_142.0.14+gceaf578+chromium-142.0.7444.163_linux64_minimal.tar.bz2 
+tar -xvf cef_binary_142.0.14+gceaf578+chromium-142.0.7444.163_linux64_minimal.tar.bz2
 rm cef_binary_142.0.14+gceaf578+chromium-142.0.7444.163_linux64_minimal.tar.bz2
 mv cef_binary_142.0.14+gceaf578+chromium-142.0.7444.163_linux64_minimal cef
 cd cef
