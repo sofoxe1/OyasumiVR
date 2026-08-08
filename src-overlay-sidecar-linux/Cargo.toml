@@ -5,7 +5,7 @@ edition = "2024"
 
 [dependencies]
 env_logger = { version = "0.11.8", default-features = false, features = ["auto-color", "humantime"] }
-log = { version = "0.4.28" }
+log = { version = "0.4.28", features = ["release_max_level_info"] }
 tokio = { version = "1.48.0", default-features = false, features = ["rt", "rt-multi-thread"] }
 tonic = { version = "0.14.2"}
 prost = "0.14"
@@ -48,4 +48,6 @@ lto = true
 [profile.dev]
 opt-level = 1
 
+[package.metadata.multivers.x86_64]
+cpus = ["x86-64-v3", "x86-64-v4"]
 

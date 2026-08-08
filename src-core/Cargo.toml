@@ -135,3 +135,5 @@ codegen-units = 1 # Compile crates one after another so the compiler can optimiz
 lto = false        # Enables link to optimizations
 #opt-level = "s"   # Optimize for binary size
 strip = true      # Remove debug symbols
+[package.metadata.multivers.x86_64]
+cpus = ["x86-64-v2", "x86-64-v3", "x86-64-v4"]
