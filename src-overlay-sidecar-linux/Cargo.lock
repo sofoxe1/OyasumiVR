@@ -1434,7 +1434,7 @@ checksum = "0ceec5bc11778974d1bcb055b18002eba7f4b3518b6a0081b3af5f21666da9ad"
 [[package]]
 name = "macros"
 version = "0.1.0"
-source = "git+https://codeberg.org/sofoxe1/xr_overlay?rev=c102dac58dd568976d69ada3804f06b2f50c31c7#c102dac58dd568976d69ada3804f06b2f50c31c7"
+source = "git+ssh://git@codeberg.org/sofoxe1/xr_overlay?rev=86a69e0de5e63116a48dda421a77f152130429ee#86a69e0de5e63116a48dda421a77f152130429ee"
 
 [[package]]
 name = "matchit"
@@ -1620,7 +1620,7 @@ checksum = "384b8ab6d37215f3c5301a95a4accb5d64aa607f1fcb26a11b5303878451b4fe"
 [[package]]
 name = "one_or_many_thin"
 version = "0.1.0"
-source = "git+https://codeberg.org/sofoxe1/one_or_many_thin?rev=8a348a574b7fcb88f567f5fe8e498d1dc64ab636#8a348a574b7fcb88f567f5fe8e498d1dc64ab636"
+source = "git+ssh://git@codeberg.org/sofoxe1/one_or_many_thin?rev=8a348a574b7fcb88f567f5fe8e498d1dc64ab636#8a348a574b7fcb88f567f5fe8e498d1dc64ab636"
 dependencies = [
  "thin-vec",
 ]
@@ -3305,7 +3305,7 @@ checksum = "66fee0b777b0f5ac1c69bb06d361268faafa61cd4682ae064a171c16c433e9e4"
 [[package]]
 name = "xr_input"
 version = "0.1.0"
-source = "git+https://codeberg.org/sofoxe1/xr_overlay?rev=c102dac58dd568976d69ada3804f06b2f50c31c7#c102dac58dd568976d69ada3804f06b2f50c31c7"
+source = "git+ssh://git@codeberg.org/sofoxe1/xr_overlay?rev=86a69e0de5e63116a48dda421a77f152130429ee#86a69e0de5e63116a48dda421a77f152130429ee"
 dependencies = [
  "log",
  "macros",
@@ -3314,7 +3314,7 @@ dependencies = [
 [[package]]
 name = "xr_overlay"
 version = "0.1.0"
-source = "git+https://codeberg.org/sofoxe1/xr_overlay?rev=c102dac58dd568976d69ada3804f06b2f50c31c7#c102dac58dd568976d69ada3804f06b2f50c31c7"
+source = "git+ssh://git@codeberg.org/sofoxe1/xr_overlay?rev=86a69e0de5e63116a48dda421a77f152130429ee#86a69e0de5e63116a48dda421a77f152130429ee"
 dependencies = [
  "ash",
  "bitmask-enum",
@@ -3332,7 +3332,7 @@ dependencies = [
 [[package]]
 name = "xr_overlay_cef"
 version = "0.1.0"
-source = "git+https://codeberg.org/sofoxe1/xr_overlay?rev=c102dac58dd568976d69ada3804f06b2f50c31c7#c102dac58dd568976d69ada3804f06b2f50c31c7"
+source = "git+ssh://git@codeberg.org/sofoxe1/xr_overlay?rev=86a69e0de5e63116a48dda421a77f152130429ee#86a69e0de5e63116a48dda421a77f152130429ee"
 dependencies = [
  "ash",
  "cef",

@@ -53,7 +53,7 @@ readonly = "0.2.13"
 regex = "1.12.2"
 reqwest = "0.12.24"
 rodio = {git="https://github.com/sofoxe1/rodio/",rev = "6cef5a9d69ff491372e5d4e03c22e8b0644866ca"}
-xr_overlay = { git = "https://codeberg.org/sofoxe1/xr_overlay", version = "0.1.0",rev="c102dac58dd568976d69ada3804f06b2f50c31c7",default-features = false,features = ["graphics","binding_config"]}
+xr_overlay = { git = "ssh://git@codeberg.org/sofoxe1/xr_overlay", version = "0.1.0",rev="86a69e0de5e63116a48dda421a77f152130429ee",default-features = false,features = ["graphics","binding_config"]}
 serde = { version = "1.0.219", features = ["derive"] }
 serde_json = "1.0.140"
 steamlocate ="2.0.1"
@@ -111,7 +111,6 @@ os-release = "0.1.0"
 mpris = "2.0.1"
 lact-client = { git = "https://github.com/sofoxe1/LACT", version = "0.8.3",rev="ea44ef45f183da45bd690317e99369714631f692" }
 pulseaudio = "0.3.0"
-xr_overlay = { git = "https://codeberg.org/sofoxe1/xr_overlay", version = "0.1.0",rev="c102dac58dd568976d69ada3804f06b2f50c31c7",default-features = false,features = ["graphics","binding_config"]}
 [dependencies.ipgeolocate]
 git = "https://github.com/Raphiiko/ipgeolocate_oyasumi.git"
 rev = "5f24925"
