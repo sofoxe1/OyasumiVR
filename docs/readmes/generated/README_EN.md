@@ -1,4 +1,4 @@
-linux port of https://github.com/Raphiiko/OyasumiVR
+linux port of https://github.com/Raphiiko/OyasumiVR targeting monado
 
 ### Buidling from source:
 * clone the repo
